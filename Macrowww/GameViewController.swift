@@ -14,14 +14,14 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let scene = GameScene()
+        let scene = HideAndSeekScene()
         scene.size = view.bounds.size
         scene.scaleMode = .aspectFill
         
         let skView = view as! SKView
-        skView.ignoresSiblingOrder = true
+        skView.ignoresSiblingOrder = false
         skView.presentScene(scene)
-        skView.showsPhysics = true
+//        skView.showsPhysics = true
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
