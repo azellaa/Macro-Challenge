@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene, SKPhysicsContactDelegate {
+class GameScene: SKScene, SKPhysicsContactDelegate, TutorialDelegate {
     
     private var rabbit = SKSpriteNode()
     private var fox = SKSpriteNode()
@@ -16,9 +16,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var bg = BackgroundHideAndSeek()
     private var rabbitPos = [NodeElement]()
     private var foxPos = [NodeElement]()
+    private var tutorialView = TutorialView()
     private let rabbitCountLabel = SKLabelNode(text: "Rabbit Count: 0")
     
     private var rabbitCount = 0
+    private var isTouched = false
+    private var isTutorialOpened = true
     private var timerValue: Int = 600 // timer 10 menit
     
     public var focusCount = 0 // focus point
@@ -38,6 +41,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addFoxPosition()
         
         addNodes()
+        
+        openTutorial()
         spawnEntity()
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
@@ -45,12 +50,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 timer.invalidate()
                 self.timesUpFunc()
             }
-            self.timerValue -= 1
+            if !self.isTutorialOpened {
+                self.timerValue -= 1
+            }
         }
+    }
+    
+    func tutorialIsOpen(_ tutorialView: TutorialView, isTutorialOpened: Bool) {
+        self.isTutorialOpened = isTutorialOpened
+//        openTutorial()
     }
     
     func spawnNextEntity() {
         isSpawning = false
+        isTouched.toggle()
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
             self?.spawnEntity()
         }
@@ -149,6 +162,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         rabbitCountLabel.zPosition = 10
         addChild(rabbitCountLabel)
         
+        tutorialView = TutorialView(sceneFrame: frame)
+        tutorialView.isUserInteractionEnabled = true
+        tutorialView.delegate = self
+        tutorialView.zPosition = 20
+        addChild(tutorialView)
+        
 //        focusBar.getSceneFrame(sceneFrame: frame)
 //        focusBar.buildProgressBar()
 //        focusBar.position = CGPoint(x: frame.width / 2, y: frame.height * 0.9)
@@ -158,6 +177,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func updateRabbitCountLabel() {
         rabbitCountLabel.text = "Rabbit Count: \(rabbitCount)"
+    }
+    
+    func openTutorial() {
+        if !isTutorialOpened {
+            tutorialView.isHidden = true
+            self.fox.isPaused = false
+            self.rabbit.isPaused = false
+        } else {
+            tutorialView.isHidden = false
+            self.fox.isPaused = true
+            self.rabbit.isPaused = true
+        }
     }
     
     func timesUpFunc() {
@@ -176,23 +207,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for touch in touches {
             let location = touch.location(in: self)
             
-            if rabbit.contains(location) {
-                // Change texture for the rabbit
-                rabbit.texture = SKTexture(imageNamed: "Rabbit_Tap")
-                rabbit.removeAllActions()
-
-                // Update the score
-                rabbitCount += 1
-                updateRabbitCountLabel()
-            }
-            
-            if fox.contains(location) {
-                // Change texture for the fox
-                fox.texture = SKTexture(imageNamed: "Fox_Tap")
-                fox.removeAllActions()
-                // Update the score
-                rabbitCount -= 1
-                updateRabbitCountLabel()
+            if !isTouched {
+                if rabbit.contains(location) {
+                    // Change texture for the rabbit
+                    rabbit.texture = SKTexture(imageNamed: "Rabbit_Tap")
+                    rabbit.removeAllActions()
+                    rabbitCount += 1
+                    updateRabbitCountLabel()
+                    isTouched.toggle()
+                }
+                
+                if fox.contains(location) {
+                    // Change texture for the fox
+                    fox.texture = SKTexture(imageNamed: "Fox_Tap")
+                    fox.removeAllActions()
+                    rabbitCount -= 1
+                    updateRabbitCountLabel()
+                    isTouched.toggle()
+                }
             }
         }
     }
@@ -235,5 +267,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         updateRabbitCountLabel()
+        openTutorial()
     }
 }
