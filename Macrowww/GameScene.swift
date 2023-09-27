@@ -224,6 +224,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, TutorialDelegate {
                     rabbitCount += 1
                     updateRabbitCountLabel()
                     isTouched.toggle()
+                    
+                    rabbit.run(slideSequence(y: rabbit.size.height))
                 }
                 
                 if fox.contains(location) {
@@ -233,45 +235,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate, TutorialDelegate {
                     rabbitCount -= 1
                     updateRabbitCountLabel()
                     isTouched.toggle()
+                    
+                    fox.run(slideSequence(y: fox.size.height))
                 }
             }
         }
     }
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
-            let location = touch.location(in: self)
-            
-            let spawnCompletionAction = SKAction.run { [weak self] in
-                self?.spawnNextEntity()
-            }
-            
-            if rabbit.contains(location) {
-                let slideDownAction = SKAction.move(by: CGVector(dx: 0, dy: -rabbit.size.height), duration: 1.0)
-                slideDownAction.timingMode = .easeIn
-
-                let sequence = SKAction.sequence([
-                    slideDownAction,
-                    SKAction.removeFromParent(),
-                    spawnCompletionAction
-                ])
-                
-                rabbit.run(sequence)
-            }
-            
-            if fox.contains(location){
-                let slideDownAction = SKAction.move(by: CGVector(dx: 0, dy: -fox.size.height), duration: 1.0)
-                slideDownAction.timingMode = .easeIn
-
-                let sequence = SKAction.sequence([
-                    slideDownAction,
-                    SKAction.removeFromParent(),
-                    spawnCompletionAction
-                ])
-                
-                fox.run(sequence)
-            }
+    func slideSequence(y: CGFloat) -> SKAction {
+        let spawnCompletionAction = SKAction.run { [weak self] in
+            self?.spawnNextEntity()
         }
+        
+        let slideDownAction = SKAction.move(by: CGVector(dx: 0, dy: -y), duration: 1.0)
+        slideDownAction.timingMode = .easeIn
+
+        let sequence = SKAction.sequence([
+            slideDownAction,
+            SKAction.removeFromParent(),
+            spawnCompletionAction
+        ])
+        
+        return sequence
     }
     
     override func update(_ currentTime: TimeInterval) {
