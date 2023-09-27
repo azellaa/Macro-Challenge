@@ -23,13 +23,12 @@ class NewPage: SKScene, SKPhysicsContactDelegate {
         progressBar.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
         addChild(progressBar)
         
-        var count = 0
+        var count = 100
         Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
-            if count >= 100 { timer.invalidate() }
-            
+            if count <= 0 { timer.invalidate() }
             self.progressBar.updateProgressBar(CGFloat(count))
             
-            count += 1
+            count -= 1
         }
     }
 }

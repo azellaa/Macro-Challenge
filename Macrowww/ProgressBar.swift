@@ -15,8 +15,8 @@ class ProgressBar: SKNode {
     private var progressBar = SKSpriteNode()
     private var progressBarContainer = SKSpriteNode()
     
-    private let progressTexture = SKTexture(imageNamed: "4")
-    private let progressContainerTexture = SKTexture(imageNamed: "blackPB")
+    private let progressTexture = SKTexture(imageNamed: "4Bar")
+    private let progressContainerTexture = SKTexture(imageNamed: "EmptyBar")
     
     private var sceneFrame = CGRect()
     
@@ -26,18 +26,19 @@ class ProgressBar: SKNode {
     
     func getSceneFrame(sceneFrame: CGRect) {
         self.sceneFrame = sceneFrame
-        maxProgressBarWidth = sceneFrame.width * 0.58
+        maxProgressBarWidth = sceneFrame.width * 0.51
     }
     
     func buildProgressBar() {
         progressBarContainer = SKSpriteNode(texture: progressContainerTexture, size: progressContainerTexture.size())
-        progressBarContainer.size.width = sceneFrame.width * 0.6
-        progressBarContainer.size.height = sceneFrame.height * 0.08
+        progressBarContainer.zPosition = 10
         
         progressBar = SKSpriteNode(texture: progressTexture, size: progressTexture.size())
-        progressBar.size.width = 0
-        progressBar.size.height = sceneFrame.height * 0.05
-        progressBar.position.x = -maxProgressBarWidth / 2
+        progressBar.size.width = CGFloat(maxProgressBarWidth)
+        progressBar.size.height = CGFloat(progressBarContainer.size.height * 0.45)
+        progressBar.zPosition = 15
+        progressBar.position.x = -maxProgressBarWidth / 2.36
+        progressBar.position.y = progressBarContainer.position.y + 1
         progressBar.anchorPoint = CGPoint(x: 0, y: 0.5)
         
         addChild(progressBarContainer)
@@ -48,13 +49,13 @@ class ProgressBar: SKNode {
         print(progress)
         switch progress {
         case 0...25 :
-            progressBar.texture = SKTexture(imageNamed: "1")
+            progressBar.texture = SKTexture(imageNamed: "1Bar")
         case 26...50 :
-            progressBar.texture = SKTexture(imageNamed: "2")
+            progressBar.texture = SKTexture(imageNamed: "2Bar")
         case 51...75 :
-            progressBar.texture = SKTexture(imageNamed: "3")
+            progressBar.texture = SKTexture(imageNamed: "3Bar")
         default :
-            progressBar.texture = SKTexture(imageNamed: "4")
+            progressBar.texture = SKTexture(imageNamed: "4Bar")
         }
         progressBar.run(SKAction.resize(toWidth: CGFloat(progress / maxProgress) * maxProgressBarWidth, duration: 0.2))
     }

@@ -12,12 +12,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, TutorialDelegate {
     
     private var rabbit = SKSpriteNode()
     private var fox = SKSpriteNode()
+    private var rabbitCounter = SKSpriteNode()
     private var focusBar = ProgressBar()
     private var bg = BackgroundHideAndSeek()
     private var rabbitPos = [NodeElement]()
     private var foxPos = [NodeElement]()
     private var tutorialView = TutorialView()
-    private let rabbitCountLabel = SKLabelNode(text: "Rabbit Count: 0")
+    private let rabbitCountLabel = SKLabelNode(text: "x0")
     
     private var rabbitCount = 0
     private var isTouched = false
@@ -58,7 +59,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, TutorialDelegate {
     
     func tutorialIsOpen(_ tutorialView: TutorialView, isTutorialOpened: Bool) {
         self.isTutorialOpened = isTutorialOpened
-//        openTutorial()
     }
     
     func spawnNextEntity() {
@@ -157,9 +157,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, TutorialDelegate {
     }
     
     func addNodes() {
+        rabbitCountLabel.fontName = "AvenirNext-Bold"
+        rabbitCountLabel.fontSize = 25
         rabbitCountLabel.name = "rabbitCountLabel"
-        rabbitCountLabel.position = CGPoint(x: 100, y: 100)
-        rabbitCountLabel.zPosition = 10
+        rabbitCountLabel.position = CGPoint(x: frame.width * 0.905, y: frame.height * 0.873)
+        rabbitCountLabel.zPosition = 15
         addChild(rabbitCountLabel)
         
         tutorialView = TutorialView(sceneFrame: frame)
@@ -168,15 +170,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate, TutorialDelegate {
         tutorialView.zPosition = 20
         addChild(tutorialView)
         
-//        focusBar.getSceneFrame(sceneFrame: frame)
-//        focusBar.buildProgressBar()
-//        focusBar.position = CGPoint(x: frame.width / 2, y: frame.height * 0.9)
-//        focusBar.zPosition = 6
-//        addChild(focusBar)
+        rabbitCounter = .init(imageNamed: "RabbitCounter")
+//        rabbitCounter.setScale(0.9)
+//        rabbitCounter.size.width = rabbitCounter.size.width * 1.05
+        rabbitCounter.position = CGPoint(x: frame.width * 0.885, y: frame.height * 0.89)
+        rabbitCounter.zPosition = 10
+        addChild(rabbitCounter)
+        
+        focusBar.getSceneFrame(sceneFrame: frame)
+        focusBar.setScale(0.9)
+        focusBar.buildProgressBar()
+        focusBar.position = CGPoint(x: frame.width * 0.47 , y: frame.height * 0.89)
+        addChild(focusBar)
     }
     
     func updateRabbitCountLabel() {
-        rabbitCountLabel.text = "Rabbit Count: \(rabbitCount)"
+        rabbitCountLabel.text = "x\(rabbitCount)"
     }
     
     func openTutorial() {
