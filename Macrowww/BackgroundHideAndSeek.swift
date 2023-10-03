@@ -31,12 +31,12 @@ class BackgroundHideAndSeek: SKNode {
     
     func addBackground() {
         background = .init(imageNamed: "Background 1")
-        background.position = CGPoint(x: sceneFrame.width / 2, y: sceneFrame.height / 2)
+        background.position = CGPoint(x: sceneFrame.width / 2, y: sceneFrame.height * 0.11)
         background.setScale(1)
         background.zPosition = 5
         
         background1 = .init(imageNamed: "Background 2")
-        background1.position = CGPoint(x: sceneFrame.width / 2, y: sceneFrame.height / 2)
+        background1.position = CGPoint(x: sceneFrame.width / 2, y: sceneFrame.height * 0.12)
         background1.setScale(1)
         background1.zPosition = 4
         

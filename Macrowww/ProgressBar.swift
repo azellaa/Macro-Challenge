@@ -26,7 +26,7 @@ class ProgressBar: SKNode {
     
     func getSceneFrame(sceneFrame: CGRect) {
         self.sceneFrame = sceneFrame
-        maxProgressBarWidth = sceneFrame.width * 0.51
+        maxProgressBarWidth = sceneFrame.width * 0.575
     }
     
     func buildProgressBar() {
@@ -36,27 +36,23 @@ class ProgressBar: SKNode {
         progressBar = SKSpriteNode(texture: progressTexture, size: progressTexture.size())
         progressBar.size.width = CGFloat(maxProgressBarWidth)
         progressBar.size.height = CGFloat(progressBarContainer.size.height * 0.45)
-        progressBar.zPosition = 15
         progressBar.position.x = -maxProgressBarWidth / 2.36
         progressBar.position.y = progressBarContainer.position.y + 1
         progressBar.anchorPoint = CGPoint(x: 0, y: 0.5)
         
+        let cropNode = SKCropNode()
+        let childNode = SKSpriteNode(texture: progressTexture, size: progressTexture.size())
+        cropNode.maskNode = progressBar
+        cropNode.zPosition = 15
+        cropNode.position.x = 34
+        
+        cropNode.addChild(childNode)
+        addChild(cropNode)
         addChild(progressBarContainer)
-        addChild(progressBar)
     }
     
     func updateProgressBar(_ progress: CGFloat) {
         print(progress)
-        switch progress {
-        case 0...25 :
-            progressBar.texture = SKTexture(imageNamed: "1Bar")
-        case 26...50 :
-            progressBar.texture = SKTexture(imageNamed: "2Bar")
-        case 51...75 :
-            progressBar.texture = SKTexture(imageNamed: "3Bar")
-        default :
-            progressBar.texture = SKTexture(imageNamed: "4Bar")
-        }
         progressBar.run(SKAction.resize(toWidth: CGFloat(progress / maxProgress) * maxProgressBarWidth, duration: 0.2))
     }
     
