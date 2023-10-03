@@ -8,16 +8,16 @@
 import SpriteKit
 
 class BackgroundHideAndSeek: SKNode {
-    private var background = SKSpriteNode()
-    private var background1 = SKSpriteNode()
-    private var background2 = SKSpriteNode()
-    private var background3 = SKSpriteNode()
-    private var background4 = SKSpriteNode()
-    private var bush = SKSpriteNode()
-    private var bush1 = SKSpriteNode()
-    private var bush2 = SKSpriteNode()
-    private var rocks = SKSpriteNode()
-    private var wood = SKSpriteNode()
+    private var background = PassThroughBackgroundNode()
+    private var background1 = PassThroughBackgroundNode()
+    private var background2 = PassThroughBackgroundNode()
+    private var background3 = PassThroughBackgroundNode()
+    private var background4 = PassThroughBackgroundNode()
+    private var bush = PassThroughBackgroundNode()
+    private var bush1 = PassThroughBackgroundNode()
+    private var bush2 = PassThroughBackgroundNode()
+    private var rocks = PassThroughBackgroundNode()
+    private var wood = PassThroughBackgroundNode()
     
     private var sceneFrame = CGRect()
     
